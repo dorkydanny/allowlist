@@ -1,0 +1,23 @@
+- name: Check current Timezone
+    command: timedatectl show --property=Timezone --value
+    register: timezone_output
+    changed_when: false
+
+- name: Create fstab entries
+
+- name: Create a docker container
+  ansible.builtin.docker_container;
+    name: jellyfin
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Pacific/Auckland
+    volumes:
+      - ./config:/config
+      - /mnt/storage/Media:/data/media
+    ports:
+      - 8096:8096
+      - 8920:8920
+      - 7359:7359/udp
+      - 1900:1900/udp
+    restart: unless-stopped
